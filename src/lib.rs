@@ -6,7 +6,7 @@ use std::ffi::CString;
 //
 // Uses 50 characters for the offsets.
 #[allow(dead_code)]
-fn set_clipboard_html(html: String) {
+pub fn set_clipboard_html(html: String) {
 
     let fragment = html;
 
