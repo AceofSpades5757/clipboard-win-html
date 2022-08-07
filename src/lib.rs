@@ -7,7 +7,6 @@ use std::ffi::CString;
 // Uses 50 characters for the offsets.
 #[allow(dead_code)]
 pub fn set_clipboard_html(html: String) {
-
     let fragment = html;
 
     let start_html = 391;
@@ -45,20 +44,24 @@ pub fn set_clipboard_html(html: String) {
 
     // Context
 
-    document.push_str(r#"<!DOCTYPE>
+    document.push_str(
+        r#"<!DOCTYPE>
 <HTML>
 <HEAD>
 </HEAD>
 <BODY>
 <!-- StartFragment -->
-"#);
+"#,
+    );
     document.push_str(&fragment);
-    document.push_str(r#"
+    document.push_str(
+        r#"
 <!-- EndFragment -->
 </BODY>
-</HTML>"#);
+</HTML>"#,
+    );
 
-    let cstring  = CString::new(document).expect("CString::new failed");
+    let cstring = CString::new(document).expect("CString::new failed");
 
     // 1. Open Clipboard
     // 2. Empty Clipboard
@@ -95,7 +98,6 @@ pub fn set_clipboard_html(html: String) {
 
     // Set Clipboard
     unsafe {
-
         let handle = windows::Win32::Foundation::HANDLE(cstring.as_ptr() as isize);
 
         if let Err(_) = windows::Win32::System::DataExchange::SetClipboardData(CF_HTML, handle) {
