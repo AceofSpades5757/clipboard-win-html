@@ -7,7 +7,6 @@ use std::ffi::CString;
 // Uses 50 characters for the offsets.
 #[allow(dead_code)]
 pub fn set_clipboard_html(html: String) {
-
     let fragment = html;
 
     let start_html = 391;
@@ -45,20 +44,24 @@ pub fn set_clipboard_html(html: String) {
 
     // Context
 
-    document.push_str(r#"<!DOCTYPE>
+    document.push_str(
+        r#"<!DOCTYPE>
 <HTML>
 <HEAD>
 </HEAD>
 <BODY>
 <!-- StartFragment -->
-"#);
+"#,
+    );
     document.push_str(&fragment);
-    document.push_str(r#"
+    document.push_str(
+        r#"
 <!-- EndFragment -->
 </BODY>
-</HTML>"#);
+</HTML>"#,
+    );
 
-    let cstring  = CString::new(document).expect("CString::new failed");
+    let cstring = CString::new(document).expect("CString::new failed");
 
     // 1. Open Clipboard
     // 2. Empty Clipboard
@@ -86,7 +89,7 @@ pub fn set_clipboard_html(html: String) {
         // [Where they tell us the official name](https://docs.microsoft.com/en-us/windows/win32/dataxchg/html-clipboard-format)
         //
         // The official name of the clipboard (the string used by RegisterClipboardFormat) is HTML Format.
-        let format_name: Vec<u16> = "HTML Format".encode_utf16().collect();
+        let format_name: Vec<u16> = "HTML Format\0".encode_utf16().collect();
         let pcwstr = windows::core::PCWSTR(format_name.as_ptr() as *const u16);
         // RegisterClipboardFormatW: <https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclipboardformatw>
         let uint = windows::Win32::System::DataExchange::RegisterClipboardFormatW(pcwstr);
@@ -95,7 +98,6 @@ pub fn set_clipboard_html(html: String) {
 
     // Set Clipboard
     unsafe {
-
         let handle = windows::Win32::Foundation::HANDLE(cstring.as_ptr() as isize);
 
         if let Err(_) = windows::Win32::System::DataExchange::SetClipboardData(CF_HTML, handle) {
