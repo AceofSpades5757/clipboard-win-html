@@ -114,18 +114,18 @@ pub fn set_clipboard_html(html: String) {
     // 3. Set Clipboard
     // 4. Close Clipboard
 
-    // Open Clipboard
+    // 1. Open Clipboard
     unsafe {
         windows::Win32::System::DataExchange::OpenClipboard(None)
             .expect("Failed to open clipboard.");
     }
 
-    // Empty Clipboard
+    // 2. Empty Clipboard
     unsafe {
         windows::Win32::System::DataExchange::EmptyClipboard().expect("Failed to empty clipboard.");
     }
 
-    // Set Clipboard
+    // 3. Set Clipboard
     unsafe {
         let mem_alloc: HGLOBAL =
             GlobalAlloc(GMEM_MOVEABLE, cstring.len() * std::mem::size_of::<u16>())
@@ -140,7 +140,7 @@ pub fn set_clipboard_html(html: String) {
         }
     }
 
-    // Close Clipboard
+    // 4. Close Clipboard
     unsafe {
         windows::Win32::System::DataExchange::CloseClipboard().expect("Failed to close clipboard.");
     }
