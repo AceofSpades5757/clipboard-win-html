@@ -1,4 +1,17 @@
 use std::ffi::CString;
+use windows::{
+    Win32::{
+        Foundation::{
+            HANDLE, HGLOBAL
+        },
+        System::{
+            Memory::{
+                GMEM_MOVEABLE,
+                GlobalAlloc, GlobalLock, GlobalUnlock
+            },
+        }
+    }
+};
 
 // Set HTML to the clipboard on Windows.
 //
@@ -61,7 +74,8 @@ pub fn set_clipboard_html(html: String) {
 </HTML>"#,
     );
 
-    let cstring = CString::new(document).expect("CString::new failed");
+    let cstring = CString::new(document).unwrap();
+    let cstring = cstring.as_bytes_with_nul();
 
     // 1. Open Clipboard
     // 2. Empty Clipboard
@@ -98,7 +112,11 @@ pub fn set_clipboard_html(html: String) {
 
     // Set Clipboard
     unsafe {
-        let handle = windows::Win32::Foundation::HANDLE(cstring.as_ptr() as isize);
+        let mem_alloc: HGLOBAL = GlobalAlloc(GMEM_MOVEABLE, cstring.len() * std::mem::size_of::<u16>())?;
+        let mem_lock = GlobalLock(mem_alloc);
+        std::ptr::copy_nonoverlapping(cstring.as_ptr(), mem_lock as *mut u8, cstring.len());
+        let _ = GlobalUnlock(mem_alloc);
+        let handle = HANDLE(mem_alloc.0 as isize);
 
         if let Err(_) = windows::Win32::System::DataExchange::SetClipboardData(CF_HTML, handle) {
             panic!("Failed to set clipboard.");
