@@ -36,6 +36,7 @@ use windows::Win32::{
 /// Uses 50 characters for the offsets.
 #[allow(dead_code)]
 pub fn set_clipboard_html(html: String) {
+    // Create the HTML document to set to clipboard
     let fragment = html;
 
     let start_html = 391;
@@ -93,6 +94,21 @@ pub fn set_clipboard_html(html: String) {
     let cstring = CString::new(document).expect("Failed to convert to CString.");
     let cstring = cstring.as_bytes_with_nul();
 
+    // Register Format
+    #[allow(non_snake_case)]
+    let CF_HTML;
+    unsafe {
+        // [Where they tell us the official name](https://docs.microsoft.com/en-us/windows/win32/dataxchg/html-clipboard-format)
+        //
+        // The official name of the clipboard (the string used by RegisterClipboardFormat) is HTML Format.
+        let format_name: Vec<u16> = "HTML Format\0".encode_utf16().collect();
+        let pcwstr = windows::core::PCWSTR(format_name.as_ptr());
+        // RegisterClipboardFormatW: <https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclipboardformatw>
+        let uint = windows::Win32::System::DataExchange::RegisterClipboardFormatW(pcwstr);
+        CF_HTML = uint;
+    }
+
+
     // 1. Open Clipboard
     // 2. Empty Clipboard
     // 3. Set Clipboard
@@ -107,20 +123,6 @@ pub fn set_clipboard_html(html: String) {
     // Empty Clipboard
     unsafe {
         windows::Win32::System::DataExchange::EmptyClipboard().expect("Failed to empty clipboard.");
-    }
-
-    // Register Format
-    #[allow(non_snake_case)]
-    let CF_HTML;
-    unsafe {
-        // [Where they tell us the official name](https://docs.microsoft.com/en-us/windows/win32/dataxchg/html-clipboard-format)
-        //
-        // The official name of the clipboard (the string used by RegisterClipboardFormat) is HTML Format.
-        let format_name: Vec<u16> = "HTML Format\0".encode_utf16().collect();
-        let pcwstr = windows::core::PCWSTR(format_name.as_ptr());
-        // RegisterClipboardFormatW: <https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclipboardformatw>
-        let uint = windows::Win32::System::DataExchange::RegisterClipboardFormatW(pcwstr);
-        CF_HTML = uint;
     }
 
     // Set Clipboard
