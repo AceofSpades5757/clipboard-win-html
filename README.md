@@ -15,6 +15,10 @@ Add this line to your dependencies section of your `Cargo.toml` file.
 
 `clipboard-win-html = "0.1"`
 
+Or you can add it from the command line.
+
+`cargo add clipboard-win-html`
+
 # Usage
 
 ```rust
