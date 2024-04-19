@@ -59,7 +59,7 @@ impl fmt::Display for Error {
 /// https://docs.microsoft.com/en-us/windows/win32/dataxchg/html-clipboard-format
 ///
 /// Uses 50 characters for the offsets.
-pub fn set_clipboard_html(html: String) {
+pub fn set_clipboard_html(html: String) -> Result<(), Error> {
     // Create the HTML document to set to clipboard
     let fragment = html;
 
@@ -115,8 +115,9 @@ pub fn set_clipboard_html(html: String) {
 </HTML>"#,
     );
 
-    let cstring = CString::new(document).expect("Failed to convert to CString.");
-    let cstring = cstring.as_bytes_with_nul();
+    let cstring = CString::new(document)
+        .map_err(|_| Error::HtmlTemplateCreationError)?
+        .into_bytes_with_nul();
 
     // Register Format
     #[allow(non_snake_case)]
@@ -141,19 +142,20 @@ pub fn set_clipboard_html(html: String) {
     // 1. Open Clipboard
     unsafe {
         windows::Win32::System::DataExchange::OpenClipboard(None)
-            .expect("Failed to open clipboard.");
+            .map_err(|_| Error::OpenClipboardError)?;
     }
 
     // 2. Empty Clipboard
     unsafe {
-        windows::Win32::System::DataExchange::EmptyClipboard().expect("Failed to empty clipboard.");
+        windows::Win32::System::DataExchange::EmptyClipboard()
+        .map_err(|_| Error::EmptyClipboardError)?;
     }
 
     // 3. Set Clipboard
     unsafe {
         let mem_alloc: HGLOBAL =
             GlobalAlloc(GMEM_MOVEABLE, cstring.len() * std::mem::size_of::<u16>())
-                .expect("Failed to allocate memory.");
+            .map_err(|_| Error::MemoryAllocationError)?;
         let mem_lock = GlobalLock(mem_alloc);
         std::ptr::copy_nonoverlapping(cstring.as_ptr(), mem_lock as *mut u8, cstring.len());
         let _ = GlobalUnlock(mem_alloc);
@@ -166,6 +168,9 @@ pub fn set_clipboard_html(html: String) {
 
     // 4. Close Clipboard
     unsafe {
-        windows::Win32::System::DataExchange::CloseClipboard().expect("Failed to close clipboard.");
+        windows::Win32::System::DataExchange::CloseClipboard()
+        .map_err(|_| Error::CloseClipboardError)?;
     }
+
+    Ok(())
 }
