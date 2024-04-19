@@ -3,7 +3,7 @@ name = "clipboard-win-html"
 version = "0.1.2"
 edition = "2021"
 authors = ["Kyle L. Davis <aceofspades5757.github@gmail.com>"]
-description = "Copy HTML to Windows clipboard."
+description = "Copy HTML to the Windows clipboard."
 
 readme = "README.md"
 license = "MIT OR Apache-2.0"
