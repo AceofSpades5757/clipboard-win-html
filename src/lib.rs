@@ -2,7 +2,7 @@
 //!
 //! ## Example
 //! ```rust
-//! use clipboard_html::set_clipboard_html;
+//! use clipboard_win_html::set_clipboard_html;
 //!
 //! set_clipboard_html("<h1>Hello, World!</h1>".to_string());
 //! ```
