@@ -74,7 +74,7 @@ pub fn set_clipboard_html(html: String) {
 </HTML>"#,
     );
 
-    let cstring = CString::new(document).unwrap();
+    let cstring = CString::new(document).expect("Failed to convert to CString.");
     let cstring = cstring.as_bytes_with_nul();
 
     // 1. Open Clipboard
@@ -84,16 +84,12 @@ pub fn set_clipboard_html(html: String) {
 
     // Open Clipboard
     unsafe {
-        if !windows::Win32::System::DataExchange::OpenClipboard(None).as_bool() {
-            panic!("Failed to open clipboard.");
-        }
+        windows::Win32::System::DataExchange::OpenClipboard(None).expect("Failed to open clipboard.");
     }
 
     // Empty Clipboard
     unsafe {
-        if !windows::Win32::System::DataExchange::EmptyClipboard().as_bool() {
-            panic!("Failed to empty clipboard.");
-        }
+        windows::Win32::System::DataExchange::EmptyClipboard().expect("Failed to empty clipboard.");
     }
 
     // Register Format
@@ -112,7 +108,7 @@ pub fn set_clipboard_html(html: String) {
 
     // Set Clipboard
     unsafe {
-        let mem_alloc: HGLOBAL = GlobalAlloc(GMEM_MOVEABLE, cstring.len() * std::mem::size_of::<u16>())?;
+        let mem_alloc: HGLOBAL = GlobalAlloc(GMEM_MOVEABLE, cstring.len() * std::mem::size_of::<u16>()).expect("Failed to allocate memory.");
         let mem_lock = GlobalLock(mem_alloc);
         std::ptr::copy_nonoverlapping(cstring.as_ptr(), mem_lock as *mut u8, cstring.len());
         let _ = GlobalUnlock(mem_alloc);
@@ -125,8 +121,6 @@ pub fn set_clipboard_html(html: String) {
 
     // Close Clipboard
     unsafe {
-        if !windows::Win32::System::DataExchange::CloseClipboard().as_bool() {
-            panic!("Failed to close clipboard.");
-        }
+        windows::Win32::System::DataExchange::CloseClipboard().expect("Failed to close clipboard.");
     }
 }
