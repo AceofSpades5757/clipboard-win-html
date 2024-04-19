@@ -92,7 +92,7 @@ pub fn set_clipboard_html(html: String) {
         //
         // The official name of the clipboard (the string used by RegisterClipboardFormat) is HTML Format.
         let format_name: Vec<u16> = "HTML Format\0".encode_utf16().collect();
-        let pcwstr = windows::core::PCWSTR(format_name.as_ptr() as *const u16);
+        let pcwstr = windows::core::PCWSTR(format_name.as_ptr());
         // RegisterClipboardFormatW: <https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclipboardformatw>
         let uint = windows::Win32::System::DataExchange::RegisterClipboardFormatW(pcwstr);
         CF_HTML = uint;
