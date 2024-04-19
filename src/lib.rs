@@ -29,11 +29,11 @@ use windows::Win32::{
     System::Memory::{GlobalAlloc, GlobalLock, GlobalUnlock, GMEM_MOVEABLE},
 };
 
-// Set HTML to the clipboard on Windows.
-//
-// https://docs.microsoft.com/en-us/windows/win32/dataxchg/html-clipboard-format
-//
-// Uses 50 characters for the offsets.
+/// Set HTML to the clipboard on Windows.
+///
+/// https://docs.microsoft.com/en-us/windows/win32/dataxchg/html-clipboard-format
+///
+/// Uses 50 characters for the offsets.
 #[allow(dead_code)]
 pub fn set_clipboard_html(html: String) {
     let fragment = html;
