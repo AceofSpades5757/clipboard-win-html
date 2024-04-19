@@ -23,11 +23,36 @@
 //! - [Clipboard Formats](https://docs.microsoft.com/en-us/windows/win32/dataxchg/clipboard-formats)
 //! - [Clipboard Data Formats](https://docs.microsoft.com/en-us/windows/win32/dataxchg/clipboard-data-formats)
 //! - [Clipboard](https://docs.microsoft.com/en-us/windows/win32/dataxchg/clipboard)
+use std::fmt;
 use std::ffi::CString;
 use windows::Win32::{
     Foundation::{HANDLE, HGLOBAL},
     System::Memory::{GlobalAlloc, GlobalLock, GlobalUnlock, GMEM_MOVEABLE},
 };
+
+/// Any errors that might occur during the process of setting HTML to the clipboard.
+#[derive(Debug)]
+pub enum Error {
+    HtmlTemplateCreationError,
+    OpenClipboardError,
+    EmptyClipboardError,
+    SetClipboardError,
+    CloseClipboardError,
+    MemoryAllocationError,
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Error::HtmlTemplateCreationError => write!(f, "Failed to create HTML template."),
+            Error::OpenClipboardError => write!(f, "Failed to open clipboard."),
+            Error::EmptyClipboardError => write!(f, "Failed to empty clipboard."),
+            Error::SetClipboardError => write!(f, "Failed to set clipboard."),
+            Error::CloseClipboardError => write!(f, "Failed to close clipboard."),
+            Error::MemoryAllocationError => write!(f, "Failed to allocate memory."),
+        }
+    }
+}
 
 /// Set HTML to the clipboard on Windows.
 ///
