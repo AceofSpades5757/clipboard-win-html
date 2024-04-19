@@ -1,6 +1,6 @@
 [package]
 name = "clipboard-win-html"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 authors = ["Kyle L. Davis <aceofspades5757.github@gmail.com>"]
 description = "Copy HTML to the Windows clipboard."
