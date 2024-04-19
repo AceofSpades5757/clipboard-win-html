@@ -1,16 +1,7 @@
 use std::ffi::CString;
-use windows::{
-    Win32::{
-        Foundation::{
-            HANDLE, HGLOBAL
-        },
-        System::{
-            Memory::{
-                GMEM_MOVEABLE,
-                GlobalAlloc, GlobalLock, GlobalUnlock
-            },
-        }
-    }
+use windows::Win32::{
+    Foundation::{HANDLE, HGLOBAL},
+    System::Memory::{GlobalAlloc, GlobalLock, GlobalUnlock, GMEM_MOVEABLE},
 };
 
 // Set HTML to the clipboard on Windows.
@@ -84,7 +75,8 @@ pub fn set_clipboard_html(html: String) {
 
     // Open Clipboard
     unsafe {
-        windows::Win32::System::DataExchange::OpenClipboard(None).expect("Failed to open clipboard.");
+        windows::Win32::System::DataExchange::OpenClipboard(None)
+            .expect("Failed to open clipboard.");
     }
 
     // Empty Clipboard
@@ -108,7 +100,9 @@ pub fn set_clipboard_html(html: String) {
 
     // Set Clipboard
     unsafe {
-        let mem_alloc: HGLOBAL = GlobalAlloc(GMEM_MOVEABLE, cstring.len() * std::mem::size_of::<u16>()).expect("Failed to allocate memory.");
+        let mem_alloc: HGLOBAL =
+            GlobalAlloc(GMEM_MOVEABLE, cstring.len() * std::mem::size_of::<u16>())
+                .expect("Failed to allocate memory.");
         let mem_lock = GlobalLock(mem_alloc);
         std::ptr::copy_nonoverlapping(cstring.as_ptr(), mem_lock as *mut u8, cstring.len());
         let _ = GlobalUnlock(mem_alloc);
