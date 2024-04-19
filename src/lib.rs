@@ -34,7 +34,6 @@ use windows::Win32::{
 /// https://docs.microsoft.com/en-us/windows/win32/dataxchg/html-clipboard-format
 ///
 /// Uses 50 characters for the offsets.
-#[allow(dead_code)]
 pub fn set_clipboard_html(html: String) {
     // Create the HTML document to set to clipboard
     let fragment = html;
