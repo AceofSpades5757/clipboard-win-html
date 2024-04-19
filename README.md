@@ -24,7 +24,7 @@ Or you can add it from the command line.
 ```rust
 use clipboard_win_html::set_clipboard_html;
 
-set_clipboard_html("<h1>Pure, valid, HTML.</h1>");
+set_clipboard_html("<h1>Pure, valid, HTML.</h1>").unwrap();
 ```
 
 Paste away.
