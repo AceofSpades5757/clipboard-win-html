@@ -10,6 +10,10 @@ license = "MIT OR Apache-2.0"
 
 homepage = "https://github.com/AceofSpades5757/clipboard-win-html"
 repository = "https://github.com/AceofSpades5757/clipboard-win-html"
+documentation = "https://docs.rs/clipboard-win-html"
+
+keywords = ["clipboard", "windows", "html", "copy", "paste"]
+categories = ["os::windows-apis"]
 
 [dependencies.windows]
 # Windows API
