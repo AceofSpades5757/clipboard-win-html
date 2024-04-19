@@ -108,7 +108,7 @@ pub fn set_clipboard_html(html: String) {
         let _ = GlobalUnlock(mem_alloc);
         let handle = HANDLE(mem_alloc.0 as isize);
 
-        if let Err(_) = windows::Win32::System::DataExchange::SetClipboardData(CF_HTML, handle) {
+        if windows::Win32::System::DataExchange::SetClipboardData(CF_HTML, handle).is_err() {
             panic!("Failed to set clipboard.");
         }
     }
