@@ -1,3 +1,28 @@
+//! A library to set HTML to the clipboard.
+//!
+//! ## Example
+//! ```rust
+//! use clipboard_html::set_clipboard_html;
+//!
+//! set_clipboard_html("<h1>Hello, World!</h1>".to_string());
+//! ```
+//! ## Platform
+//! - Windows
+//!
+//! ## Windows References
+//! - [HTML Clipboard Format](https://docs.microsoft.com/en-us/windows/win32/dataxchg/html-clipboard-format)
+//! - [Clipboard Functions](https://docs.microsoft.com/en-us/windows/win32/dataxchg/clipboard-functions)
+//! - [RegisterClipboardFormatW function](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclipboardformatw)
+//! - [GlobalAlloc function](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
+//! - [GlobalLock function](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock)
+//! - [GlobalUnlock function](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
+//! - [SetClipboardData function](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboarddata)
+//! - [EmptyClipboard function](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
+//! - [CloseClipboard function](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
+//! - [OpenClipboard function](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openclipboard)
+//! - [Clipboard Formats](https://docs.microsoft.com/en-us/windows/win32/dataxchg/clipboard-formats)
+//! - [Clipboard Data Formats](https://docs.microsoft.com/en-us/windows/win32/dataxchg/clipboard-data-formats)
+//! - [Clipboard](https://docs.microsoft.com/en-us/windows/win32/dataxchg/clipboard)
 use std::ffi::CString;
 use windows::Win32::{
     Foundation::{HANDLE, HGLOBAL},
